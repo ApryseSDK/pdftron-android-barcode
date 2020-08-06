@@ -182,6 +182,7 @@ class MainActivity : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostLis
             val toolManager = getToolManager()
             val tool = BarcodeCreate(getPDFViewCtrl()!!)
             tool.setLink(mBarcodeLink)
+            tool.setBarcodeType(BarcodeCreate.QR_CODE_TYPE)
             toolManager!!.tool = tool
         }
     }
