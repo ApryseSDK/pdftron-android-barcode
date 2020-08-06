@@ -2,7 +2,9 @@
 
 PDFTron Android Barcode demonstrates a PoC for generating barcodes, scanning existing QR/barcodes, stamping them onto a PDF and then reading them after they have been flattened onto the document.
 
-![Screenshot](https://github.com/PDFTron/webviewer-barcode/blob/master/barcode.gif)
+It is possible to generate QR instead of barcodes.
+
+![Screenshot](https://pdftron.s3.amazonaws.com/custom/websitefiles/android/7-1-5/barcode.gif)
 
 
 ## Barcode Libraries
