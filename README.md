@@ -1,8 +1,6 @@
 # PDFTron Android Barcode Annotation Samples
 
-PDFTron Android Barcode demonstrates a PoC for generating barcodes, scanning existing QR/barcodes, stamping them onto a PDF and then reading them after they have been flattened onto the document.
-
-It is possible to generate QR instead of barcodes.
+PDFTron Android Barcode demonstrates a PoC for generating QR/barcodes, scanning existing QR/barcodes with camera, stamping them onto a PDF and then reading them after they have been flattened onto the document.
 
 ![Screenshot](https://pdftron.s3.amazonaws.com/custom/websitefiles/android/7-1-5/barcode.gif)
 
