@@ -9,7 +9,7 @@ import com.pdftron.pdf.utils.Utils
 class BarcodeEdit(ctrl: PDFViewCtrl) : AnnotEdit(ctrl) {
 
     override fun getMenuResByAnnot(annot: Annot?): Int {
-        if (annot?.getCustomData(BarcodeCreate.BARCODE_KEY) != null) {
+        if (!Utils.isNullOrEmpty(annot?.getCustomData(BarcodeCreate.BARCODE_KEY))) {
             return R.menu.annot_barcode
         }
         return super.getMenuResByAnnot(annot)
