@@ -2,9 +2,11 @@
     <string name="app_name">Barcode</string>
 
     <string name="permission_camera_rationale">Camera permission is needed to proceed.</string>
+    <string name="tool_qr_code_stamp">QR code</string>
     <string name="tool_barcode_stamp">Barcode</string>
     <string name="tool_barcode_scanner_stamp">Barcode scanner</string>
     <string name="tool_barcode_tap_toast">Tap to place barcode.</string>
+    <string name="tool_select_region">Select region</string>
 
     <string name="barcode_dialog_hint">Type to generate barcode</string>
 

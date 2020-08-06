@@ -32,8 +32,14 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
 
     private val BUNDLE_X = "bundle_x"
     private val BUNDLE_Y = "bundle_y"
+    private val BUNDLE_TYPE = "bundle_type"
 
     private var mLink: String? = null
+    private var mBarcodeType = BARCODE_TYPE
+
+    fun setBarcodeType(type: String) {
+        mBarcodeType = type
+    }
 
     override fun getToolMode(): ToolManager.ToolModeBase {
         return MODE
@@ -48,7 +54,7 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
     }
 
     private fun createBarcodeAnnot(link: String) {
-        val bitmap = createImage(link, "Barcode")
+        val bitmap = createImage(link, mBarcodeType)
         val file = saveBitmap(bitmap)
         if (file != null) {
             createImageStamp(Uri.fromFile(file), 0, null)
@@ -68,14 +74,21 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
         val toolManager = mPdfViewCtrl.toolManager as ToolManager
         val activity = toolManager.currentActivity
 
-        val textInputViewModel = ViewModelProviders.of(activity!!).get(TextInputViewModel::class.java)
+        val textInputViewModel =
+            ViewModelProviders.of(activity!!).get(TextInputViewModel::class.java)
         textInputViewModel.observeOnComplete(activity, Observer<Event<TextInputResult>> {
             if (it != null && !it.hasBeenHandled()) {
                 val result = it.contentIfNotHandled!!
                 if (result.requestCode == INPUT_REQUEST_CODE) {
                     if (result.extra != null) {
                         val bundle = result.extra
-                        setTargetPoint(PointF(bundle!!.getFloat(BUNDLE_X), bundle.getFloat(BUNDLE_Y)), false)
+                        setTargetPoint(
+                            PointF(
+                                bundle!!.getFloat(BUNDLE_X),
+                                bundle.getFloat(BUNDLE_Y)
+                            ), false
+                        )
+                        setBarcodeType(bundle.getString(BUNDLE_TYPE, BARCODE_TYPE))
                         createBarcodeAnnot(result.result)
                     }
                 }
@@ -85,14 +98,21 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
         val extra = Bundle()
         extra.putFloat(BUNDLE_X, mTargetPoint.x)
         extra.putFloat(BUNDLE_Y, mTargetPoint.y)
+        extra.putString(BUNDLE_TYPE, mBarcodeType)
+
+        var title = R.string.tool_barcode_stamp
+        if (mBarcodeType == QR_CODE_TYPE) {
+            title = R.string.tool_qr_code_stamp
+        }
 
         val dialog = TextInputDialog.newInstance(
-                INPUT_REQUEST_CODE,
-                R.string.tool_barcode_stamp,
-                R.string.barcode_dialog_hint,
-                R.string.ok,
-                R.string.cancel,
-                extra)
+            INPUT_REQUEST_CODE,
+            title,
+            R.string.barcode_dialog_hint,
+            R.string.ok,
+            R.string.cancel,
+            extra
+        )
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.PDFTronAppTheme)
         dialog.show(activity.supportFragmentManager, TextInputDialog.TAG)
         mNextToolMode = toolMode
@@ -107,11 +127,36 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
         var bitMatrix: BitMatrix? = null
         bitMatrix = when (type) {
             "QR Code" -> MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, size, size)
-            "Barcode" -> MultiFormatWriter().encode(message, BarcodeFormat.CODE_128, size_width, size_height)
-            "Data Matrix" -> MultiFormatWriter().encode(message, BarcodeFormat.DATA_MATRIX, size, size)
-            "PDF 417" -> MultiFormatWriter().encode(message, BarcodeFormat.PDF_417, size_width, size_height)
-            "Barcode-39" -> MultiFormatWriter().encode(message, BarcodeFormat.CODE_39, size_width, size_height)
-            "Barcode-93" -> MultiFormatWriter().encode(message, BarcodeFormat.CODE_93, size_width, size_height)
+            "Barcode" -> MultiFormatWriter().encode(
+                message,
+                BarcodeFormat.CODE_128,
+                size_width,
+                size_height
+            )
+            "Data Matrix" -> MultiFormatWriter().encode(
+                message,
+                BarcodeFormat.DATA_MATRIX,
+                size,
+                size
+            )
+            "PDF 417" -> MultiFormatWriter().encode(
+                message,
+                BarcodeFormat.PDF_417,
+                size_width,
+                size_height
+            )
+            "Barcode-39" -> MultiFormatWriter().encode(
+                message,
+                BarcodeFormat.CODE_39,
+                size_width,
+                size_height
+            )
+            "Barcode-93" -> MultiFormatWriter().encode(
+                message,
+                BarcodeFormat.CODE_93,
+                size_width,
+                size_height
+            )
             "AZTEC" -> MultiFormatWriter().encode(message, BarcodeFormat.AZTEC, size, size)
             else -> MultiFormatWriter().encode(message, BarcodeFormat.QR_CODE, size, size)
         }
@@ -153,6 +198,9 @@ class BarcodeCreate(ctrl: PDFViewCtrl) : Stamper(ctrl) {
     companion object {
         val MODE: ToolManager.ToolModeBase = ToolManager.ToolMode.addNewMode(Annot.e_Stamp)
         val BARCODE_KEY = "barcode_key"
+
+        val BARCODE_TYPE = "Barcode"
+        val QR_CODE_TYPE = "QR Code"
     }
 
 }

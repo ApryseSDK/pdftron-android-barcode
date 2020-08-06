@@ -19,7 +19,7 @@ class BarcodeEdit(ctrl: PDFViewCtrl) : AnnotEdit(ctrl) {
         if (menuItem?.itemId == R.id.qm_barcode) {
             if (mAnnot != null) {
                 val barcode = mAnnot.getCustomData(BarcodeCreate.BARCODE_KEY)
-                Utils.safeShowAlertDialog(mPdfViewCtrl.context, barcode, "Barcode link")
+                Utils.safeShowAlertDialog(mPdfViewCtrl.context, barcode, "Content")
             }
             return true
         }

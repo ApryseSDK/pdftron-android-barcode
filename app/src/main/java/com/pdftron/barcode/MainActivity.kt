@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.pdftron.barcode.barcode.RegionSelect
 import com.pdftron.pdf.PDFViewCtrl
 import com.pdftron.pdf.config.ToolManagerBuilder
 import com.pdftron.pdf.config.ViewerBuilder2
@@ -29,8 +30,10 @@ class MainActivity : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostLis
 
     private val PERMISSIONS_CAMERA = arrayOf(Manifest.permission.CAMERA)
 
+    private val QR_CODE_ID = 1000
     private val BARCODE_ID = 1001
     private val BARCODE_SCANNER_ID = 1002
+    private val SELECT_REGION_ID = 1003
 
     private val CAMERA_PERMISSION_REQUEST = 1000
     private val SCANNER_REQUEST = 1001
@@ -50,16 +53,37 @@ class MainActivity : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostLis
         val toolManagerBuilder = ToolManagerBuilder.from()
             .addCustomizedTool(BarcodeCreate.MODE, BarcodeCreate::class.java)
             .addCustomizedTool(ToolManager.ToolMode.ANNOT_EDIT, BarcodeEdit::class.java)
+            .addCustomizedTool(RegionSelect.MODE, RegionSelect::class.java)
 
         val barcodeTag = "Barcode"
 
         val barcodeToolbarBuilder = AnnotationToolbarBuilder.withTag(barcodeTag)
-            .addCustomSelectableButton(R.string.tool_barcode_stamp,
-                R.drawable.ic_qr_code_black_24dp, BARCODE_ID)
-            .addCustomButton(R.string.tool_barcode_scanner_stamp,
-                R.drawable.ic_qr_code_scanner_black_24dp, BARCODE_SCANNER_ID)
-            .addCustomStickyButton(com.pdftron.pdf.tools.R.string.undo, com.pdftron.pdf.tools.R.drawable.ic_undo_black_24dp, DefaultToolbars.ButtonId.UNDO.value())
-            .addCustomStickyButton(com.pdftron.pdf.tools.R.string.redo, com.pdftron.pdf.tools.R.drawable.ic_redo_black_24dp, DefaultToolbars.ButtonId.REDO.value())
+            .addCustomSelectableButton(
+                R.string.tool_qr_code_stamp,
+                R.drawable.ic_qr_code_black_24dp, QR_CODE_ID
+            )
+            .addCustomSelectableButton(
+                R.string.tool_barcode_stamp,
+                R.drawable.ic_price, BARCODE_ID
+            )
+            .addCustomButton(
+                R.string.tool_barcode_scanner_stamp,
+                R.drawable.ic_qr_code_scanner_black_24dp, BARCODE_SCANNER_ID
+            )
+            .addCustomSelectableButton(
+                R.string.tool_select_region,
+                R.drawable.ic_select_rectangular_black_24dp, SELECT_REGION_ID
+            )
+            .addCustomStickyButton(
+                com.pdftron.pdf.tools.R.string.undo,
+                com.pdftron.pdf.tools.R.drawable.ic_undo_black_24dp,
+                DefaultToolbars.ButtonId.UNDO.value()
+            )
+            .addCustomStickyButton(
+                com.pdftron.pdf.tools.R.string.redo,
+                com.pdftron.pdf.tools.R.drawable.ic_redo_black_24dp,
+                DefaultToolbars.ButtonId.REDO.value()
+            )
 
         val viewToolbarBuilder = AnnotationToolbarBuilder
             .withTag(DefaultToolbars.TAG_VIEW_TOOLBAR)
@@ -197,6 +221,9 @@ class MainActivity : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostLis
         if (p0?.itemId == BARCODE_ID) {
             val toolManager = getToolManager()
             val tool = toolManager!!.createTool(BarcodeCreate.MODE, null)
+            if (tool is BarcodeCreate) {
+                (tool as BarcodeCreate).setBarcodeType(BarcodeCreate.BARCODE_TYPE)
+            }
             toolManager.tool = tool
             return true
         } else if (p0?.itemId == BARCODE_SCANNER_ID) {
@@ -205,6 +232,19 @@ class MainActivity : AppCompatActivity(), PdfViewCtrlTabHostFragment2.TabHostLis
             } else {
                 startScannerActivity()
             }
+            return true
+        } else if (p0?.itemId == SELECT_REGION_ID) {
+            val toolManager = getToolManager()
+            val tool = toolManager!!.createTool(RegionSelect.MODE, null)
+            toolManager.tool = tool
+            return true
+        } else if (p0?.itemId == QR_CODE_ID) {
+            val toolManager = getToolManager()
+            val tool = toolManager!!.createTool(BarcodeCreate.MODE, null)
+            if (tool is BarcodeCreate) {
+                (tool as BarcodeCreate).setBarcodeType(BarcodeCreate.QR_CODE_TYPE)
+            }
+            toolManager.tool = tool
             return true
         }
         return false
