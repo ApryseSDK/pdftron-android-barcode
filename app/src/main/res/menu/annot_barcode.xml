@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@id/qm_first_row_group">
+        <item android:id="@+id/qm_barcode"
+            android:title="@string/tool_barcode_stamp"
+            android:icon="@drawable/ic_qr_code_black_24dp"/>
+        <item android:id="@id/qm_note"
+            android:title="@string/tools_qm_note"
+            android:icon="@drawable/ic_chat_black_24dp"/>
+        <item android:id="@id/qm_copy"
+            android:title="@string/tools_qm_copy"
+            android:icon="@drawable/ic_copy_black_24dp"/>
+        <item android:id="@id/qm_delete"
+            android:title="@string/delete"
+            android:icon="@drawable/ic_delete_black_24dp"/>
+    </group>
+    <group android:id="@id/qm_overflow_row_group">
+        <item android:id="@id/qm_flatten"
+            android:title="@string/tools_qm_flatten"/>
+    </group>
+</menu>
