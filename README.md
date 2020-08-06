@@ -4,6 +4,11 @@ PDFTron Android Barcode demonstrates a PoC for generating QR/barcodes, scanning 
 
 ![Screenshot](https://pdftron.s3.amazonaws.com/custom/websitefiles/android/7-1-5/barcode.gif)
 
+## Running the sample
+
+1. **Import the sample project into Android Studio**
+
+2. **Run the project in Android Studio**
 
 ## Barcode Libraries
 
